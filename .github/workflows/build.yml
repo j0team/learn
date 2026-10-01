@@ -1,0 +1,56 @@
+# Builds the desktop app on each system (the app bundles that system's Bun, so it can't be
+# cross-built). Run it by hand from the Actions tab, or push a v* tag for a draft release.
+name: Build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ["v*"]
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, macos-15-intel, windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # The test script's globs need a POSIX shell.
+      - if: runner.os != 'Windows'
+        run: npm test
+      - run: npm run app
+      - name: Smoke test the packaged server
+        shell: bash
+        run: |
+          app=$(dirname "$(dirname "$(find release -path '*/app/server/server.mjs' | head -1)")")
+          LEARN_SESSIONS="$RUNNER_TEMP/sessions" "$app/node_modules/bun/bin/bun.exe" "$app/server/server.mjs" &
+          for i in $(seq 30); do curl -sf http://127.0.0.1:4747/api/health && exit 0; sleep 1; done
+          exit 1
+      - uses: actions/upload-artifact@v5
+        with:
+          name: learn-${{ matrix.os }}
+          path: |
+            release/Learn-*.zip
+            release/Learn-*.tar.gz
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v5
+        with:
+          path: out
+          merge-multiple: true
+      - run: gh release create "$GITHUB_REF_NAME" out/* --draft --repo "$GITHUB_REPOSITORY" --title "Learn ${GITHUB_REF_NAME#v}" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

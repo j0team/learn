@@ -1,0 +1,64 @@
+{
+  "name": "learn",
+  "productName": "Learn",
+  "private": true,
+  "version": "1.0.0",
+  "description": "A local web app for learning with an AI tutor, built on pi.",
+  "license": "MIT",
+  "type": "module",
+  "main": "electron/main.mjs",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "start": "bun server/server.mjs",
+    "app": "node electron/pack.mjs",
+    "app:dev": "electron .",
+    "test": "bun test server/*.test.mjs extensions/*.test.mjs"
+  },
+  "dependencies": {
+    "@earendil-works/pi-ai": "0.87.1",
+    "@earendil-works/pi-coding-agent": "0.87.1",
+    "@mermaid-js/mermaid-cli": "^11.17.0",
+    "@oh-my-pi/pi-ai": "18.4.6",
+    "@oh-my-pi/pi-catalog": "18.4.6",
+    "bun": "1.4.2"
+  },
+  "devDependencies": {
+    "@base-ui/react": "^1.8.0",
+    "@electron/packager": "20.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "@types/node": "^24.19.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "dompurify": "^3.4.16",
+    "electron": "44.5.1",
+    "highlight.js": "^11.12.0",
+    "katex": "^0.18.10",
+    "marked": "^18.0.14",
+    "mermaid": "^12.0.0",
+    "oxlint": "^1.81.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "tailwind-merge": "^3.7.0",
+    "tailwindcss": "^4.3.3",
+    "typescript": "~6.0.2",
+    "vite": "^8.3.0",
+    "xxhash-wasm": "1.1.0",
+    "zustand": "^5.0.15"
+  },
+  "overrides": {
+    "lodash-es": "^4.18.1"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "allowScripts": {
+    "electron@44.5.1": true,
+    "bun@1.4.2": true
+  }
+}

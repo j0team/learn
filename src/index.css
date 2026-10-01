@@ -1,0 +1,447 @@
+@import "tailwindcss";
+
+/* Learn. Catppuccin-inspired: Macchiato's blue-grey base in dark, Latte-white in
+   light, pink as the one accent. Soft pastel light drifts behind everything so
+   the glass panels have colour to bend; the chrome itself stays quiet.
+
+   Components style themselves with Tailwind utilities on the tokens below.
+   This file keeps only what utilities can't express well: the tokens, the
+   theme/font switches, generated markdown (.prose), the glass lens, the mascot
+   and the ambient light. */
+
+@custom-variant dark (&:where(:root:not([data-theme="light"]) *));
+@custom-variant light (&:where(:root[data-theme="light"] *));
+/* Tutor at work (the mascot hops, the transcript makes room for the status line). */
+@custom-variant working (&:where(:root[data-working] *));
+@custom-variant narrow (@media (max-width: 860px));
+@custom-variant can-hover (@media (hover: hover));
+@custom-variant no-hover (@media (hover: none));
+
+:root {
+	--bg: oklch(0.255 0.03 278); /* Macchiato base */
+	--panel: oklch(0.225 0.028 278); /* sidebar (mantle) */
+	--surface: oklch(0.3 0.032 278); /* bubbles, quoted blocks */
+	--raised: oklch(0.285 0.032 278); /* worksheets, the composer */
+	--sunken: oklch(0.34 0.035 278); /* hover (surface0) */
+	--line: oklch(0.87 0.045 278 / 0.1);
+	--line-strong: oklch(0.87 0.045 278 / 0.18);
+	--ink: oklch(0.9 0.035 278); /* text */
+	--ink-2: oklch(0.8 0.04 278); /* subtext */
+	--ink-3: oklch(0.66 0.04 278); /* overlay */
+	--accent: oklch(0.85 0.085 342); /* pink */
+	--accent-ink: oklch(0.22 0.03 278);
+	--good: oklch(0.84 0.1 140);
+	--bad: oklch(0.74 0.12 12);
+	--warn: oklch(0.87 0.08 85);
+	--code-bg: oklch(0.21 0.026 278);
+	--shade: oklch(0.12 0.02 278);
+	--syn-attr: oklch(0.76 0.1 265);
+	--syn-number: oklch(0.8 0.1 50);
+	--syn-teal: oklch(0.82 0.07 180);
+	/* Ambient light behind the app: pink, mauve, blue, peach. */
+	--glow-1: oklch(0.8 0.12 342 / 0.26);
+	--glow-2: oklch(0.72 0.14 300 / 0.22);
+	--glow-3: oklch(0.72 0.12 262 / 0.22);
+	--glow-4: oklch(0.8 0.1 45 / 0.13);
+	color-scheme: dark;
+
+	--accent-soft: color-mix(in oklab, var(--accent) 14%, var(--bg));
+	--accent-line: color-mix(in oklab, var(--accent) 50%, var(--bg));
+	--good-soft: color-mix(in oklab, var(--good) 13%, var(--bg));
+	--good-line: color-mix(in oklab, var(--good) 45%, var(--bg));
+	--bad-soft: color-mix(in oklab, var(--bad) 13%, var(--bg));
+	--bad-line: color-mix(in oklab, var(--bad) 45%, var(--bg));
+	--shadow: 0 1px 2px color-mix(in srgb, var(--shade) 40%, transparent), 0 8px 24px color-mix(in srgb, var(--shade) 35%, transparent);
+
+	/* Fonts are picked in Settings (data-ui-font for the interface, data-read-font
+	   for lessons). Code New Roman is a system install; the rest ship in vendor/fonts. */
+	--f-code-new-roman: "CodeNewRoman Nerd Font Propo", "CodeNewRoman Nerd Font", ui-monospace, monospace;
+	--f-inter: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+	--f-geist: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+	--f-source-serif: "Source Serif 4 Variable", ui-serif, Georgia, serif;
+	--f-literata: "Literata Variable", ui-serif, Georgia, serif;
+	--f-system: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+	--read: var(--f-source-serif);
+	--ui: var(--f-geist);
+	--mono: "CodeNewRoman Nerd Font Mono", "CodeNewRoman Nerd Font", ui-monospace, "SF Mono", Menlo, monospace;
+	--measure: 880px;
+	--sidebar-w: 248px;
+	--side-w: 380px;
+	--ease: cubic-bezier(0.22, 1, 0.36, 1);
+	--spring: cubic-bezier(0.34, 1.32, 0.64, 1); /* a little overshoot, then settles */
+}
+:root[data-theme="light"] {
+	--bg: oklch(0.975 0.006 290);
+	--panel: oklch(0.96 0.008 290);
+	--surface: oklch(0.955 0.01 290);
+	--raised: oklch(0.995 0.003 290);
+	--sunken: oklch(0.93 0.012 290);
+	--line: oklch(0.3 0.03 278 / 0.09);
+	--line-strong: oklch(0.3 0.03 278 / 0.17);
+	--ink: oklch(0.32 0.04 278); /* Latte text */
+	--ink-2: oklch(0.45 0.035 278);
+	--ink-3: oklch(0.58 0.03 278);
+	--accent: oklch(0.66 0.18 345); /* Latte pink, deepened for contrast */
+	--accent-ink: oklch(0.99 0.004 345);
+	--good: oklch(0.58 0.14 145);
+	--bad: oklch(0.56 0.19 15);
+	--warn: oklch(0.66 0.14 70);
+	--code-bg: oklch(0.955 0.01 290);
+	--shade: oklch(0.3 0.04 278);
+	--syn-attr: oklch(0.52 0.15 262);
+	--syn-number: oklch(0.62 0.15 45);
+	--syn-teal: oklch(0.56 0.09 190);
+	--glow-1: oklch(0.86 0.09 342 / 0.45);
+	--glow-2: oklch(0.85 0.08 300 / 0.35);
+	--glow-3: oklch(0.86 0.08 250 / 0.42);
+	--glow-4: oklch(0.9 0.07 55 / 0.4);
+	--shadow: 0 1px 2px color-mix(in srgb, var(--shade) 8%, transparent), 0 6px 18px color-mix(in srgb, var(--shade) 7%, transparent);
+	color-scheme: light;
+}
+
+@font-face { font-family: "Inter Variable"; src: url(/fonts/inter-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Inter Variable"; src: url(/fonts/inter-latin-wght-italic.woff2) format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
+@font-face { font-family: "Geist Variable"; src: url(/fonts/geist-latin-wght-normal.woff2) format("woff2"); font-weight: 100 900; font-display: swap; }
+@font-face { font-family: "Geist Variable"; src: url(/fonts/geist-latin-wght-italic.woff2) format("woff2"); font-weight: 100 900; font-style: italic; font-display: swap; }
+@font-face { font-family: "Source Serif 4 Variable"; src: url(/fonts/source-serif-4-latin-wght-normal.woff2) format("woff2"); font-weight: 200 900; font-display: swap; }
+@font-face { font-family: "Source Serif 4 Variable"; src: url(/fonts/source-serif-4-latin-wght-italic.woff2) format("woff2"); font-weight: 200 900; font-style: italic; font-display: swap; }
+@font-face { font-family: "Literata Variable"; src: url(/fonts/literata-latin-wght-normal.woff2) format("woff2"); font-weight: 200 900; font-display: swap; }
+@font-face { font-family: "Literata Variable"; src: url(/fonts/literata-latin-wght-italic.woff2) format("woff2"); font-weight: 200 900; font-style: italic; font-display: swap; }
+
+:root[data-ui-font="code-new-roman"] { --ui: var(--f-code-new-roman); }
+:root[data-ui-font="inter"] { --ui: var(--f-inter); }
+:root[data-ui-font="geist"] { --ui: var(--f-geist); }
+:root[data-ui-font="source-serif"] { --ui: var(--f-source-serif); }
+:root[data-ui-font="literata"] { --ui: var(--f-literata); }
+:root[data-ui-font="system"] { --ui: var(--f-system); }
+:root[data-read-font="code-new-roman"] { --read: var(--f-code-new-roman); }
+:root[data-read-font="inter"] { --read: var(--f-inter); }
+:root[data-read-font="geist"] { --read: var(--f-geist); }
+:root[data-read-font="source-serif"] { --read: var(--f-source-serif); }
+:root[data-read-font="literata"] { --read: var(--f-literata); }
+:root[data-read-font="system"] { --read: var(--f-system); }
+:root[data-width="narrow"] { --measure: 720px; }
+:root[data-width="wide"] { --measure: 1120px; }
+
+
+/* Tailwind names for the tokens. Pink is `primary` (bg-primary, text-primary,
+   bg-primary-soft, border-primary-line); `accent` keeps shadcn's meaning, the
+   quiet hover fill, so shadcn components work unchanged. */
+@theme inline {
+	--color-bg: var(--bg);
+	--color-panel: var(--panel);
+	--color-surface: var(--surface);
+	--color-raised: var(--raised);
+	--color-sunken: var(--sunken);
+	--color-line: var(--line);
+	--color-line-strong: var(--line-strong);
+	--color-ink: var(--ink);
+	--color-ink-2: var(--ink-2);
+	--color-ink-3: var(--ink-3);
+	--color-primary: var(--accent);
+	--color-primary-foreground: var(--accent-ink);
+	--color-primary-ink: var(--accent-ink);
+	--color-primary-soft: var(--accent-soft);
+	--color-primary-line: var(--accent-line);
+	--color-good: var(--good);
+	--color-good-soft: var(--good-soft);
+	--color-good-line: var(--good-line);
+	--color-bad: var(--bad);
+	--color-bad-soft: var(--bad-soft);
+	--color-bad-line: var(--bad-line);
+	--color-warn: var(--warn);
+	--color-code: var(--code-bg);
+	--color-shade: var(--shade);
+	--color-syn-attr: var(--syn-attr);
+	--color-syn-number: var(--syn-number);
+	--color-syn-teal: var(--syn-teal);
+
+	/* shadcn's names, on the same palette. */
+	--color-background: var(--bg);
+	--color-foreground: var(--ink);
+	--color-card: var(--raised);
+	--color-card-foreground: var(--ink);
+	--color-popover: var(--raised);
+	--color-popover-foreground: var(--ink);
+	--color-secondary: var(--surface);
+	--color-secondary-foreground: var(--ink);
+	--color-muted: var(--surface);
+	--color-muted-foreground: var(--ink-3);
+	--color-accent: var(--sunken);
+	--color-accent-foreground: var(--ink);
+	--color-destructive: var(--bad);
+	--color-border: var(--line);
+	--color-input: var(--line-strong);
+	--color-ring: var(--accent-line);
+
+	--font-sans: var(--ui);
+	--font-ui: var(--ui);
+	--font-read: var(--read);
+	--font-mono: var(--mono);
+	--ease-soft: var(--ease);
+	--ease-spring: var(--spring);
+	--shadow-soft: var(--shadow);
+	--radius: 0.625rem;
+
+	--animate-rise: rise 260ms var(--ease) both;
+	--animate-pop-in: pop-in 260ms var(--spring) both;
+	--animate-pulse-dot: pulse 1.2s ease-in-out infinite;
+	--animate-shimmer: shimmer 2.4s linear infinite;
+}
+
+@keyframes rise { from { opacity: 0; transform: translateY(4px); } }
+@keyframes pop-in { from { opacity: 0; translate: 0 6px; scale: 0.97; } }
+@keyframes pulse { 50% { opacity: 0.25; } }
+@keyframes shimmer { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+@layer base {
+	* { scrollbar-width: none; } /* no visible scrollbars; trackpad, wheel and keys still scroll */
+	::-webkit-scrollbar { display: none; }
+	html, body, #root { height: 100%; margin: 0; }
+	body {
+		background: var(--bg);
+		color: var(--ink);
+		font: 14px/1.45 var(--ui);
+		-webkit-font-smoothing: antialiased;
+		overflow: hidden;
+	}
+	/* Line icons: 18px, stroked in the current colour. Size utilities override. */
+	svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+	svg .fill { fill: currentColor; stroke: none; }
+	button { cursor: pointer; }
+	button:disabled { cursor: default; }
+	:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+}
+
+/* Ambient light: four soft pastel pools drifting slowly behind the app. */
+body::before {
+	content: ""; position: fixed; inset: -12vmax; z-index: -1; pointer-events: none;
+	background:
+		radial-gradient(42vmax 34vmax at 24% 16%, var(--glow-1), transparent 70%),
+		radial-gradient(38vmax 30vmax at 84% 10%, var(--glow-3), transparent 70%),
+		radial-gradient(44vmax 34vmax at 72% 88%, var(--glow-2), transparent 70%),
+		radial-gradient(34vmax 28vmax at 14% 86%, var(--glow-4), transparent 70%);
+	animation: ambient 60s ease-in-out infinite alternate;
+}
+@keyframes ambient {
+	50% { transform: translate3d(4vmax, -3vmax, 0) rotate(6deg); }
+	100% { transform: translate3d(-3vmax, 3vmax, 0) rotate(-5deg) scale(1.06); }
+}
+
+/* ── Glass ───────────────────────────────────────────────────────────── */
+/* Translucent tint + backdrop blur, a bright top edge, and a rim of light that
+   fades around the curve so the surface reads as a lens, not a card. Set
+   --tint (e.g. [--tint:color-mix(in_oklab,var(--bg)_80%,transparent)]) for a
+   denser pane, and --tint-light for its light-mode tint. The utility only
+   reads them, so they never fight its own rules. */
+@utility glass {
+	position: relative;
+	background:
+		linear-gradient(180deg, color-mix(in oklab, white 6%, transparent), transparent 45%),
+		var(--tint, color-mix(in oklab, var(--bg) 52%, transparent));
+	-webkit-backdrop-filter: blur(20px) saturate(175%);
+	backdrop-filter: blur(20px) saturate(175%);
+	border: 1px solid color-mix(in oklab, white 9%, transparent);
+	box-shadow:
+		inset 0 1px 0 color-mix(in oklab, white 16%, transparent),
+		inset 0 -1px 0 color-mix(in oklab, white 4%, transparent),
+		0 18px 50px -18px color-mix(in srgb, var(--shade) 85%, transparent),
+		0 2px 8px color-mix(in srgb, var(--shade) 30%, transparent);
+	&::before {
+		content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+		background: linear-gradient(155deg,
+			color-mix(in oklab, white 42%, transparent),
+			transparent 32%, transparent 68%,
+			color-mix(in oklab, white 16%, transparent));
+		-webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+		-webkit-mask-composite: xor;
+		mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+	}
+	&:where(:root[data-theme="light"] *) {
+		background:
+			linear-gradient(180deg, color-mix(in oklab, white 6%, transparent), transparent 45%),
+			var(--tint-light, color-mix(in oklab, white 50%, transparent));
+		border-color: color-mix(in oklab, white 65%, transparent);
+		box-shadow:
+			inset 0 1px 0 color-mix(in oklab, white 90%, transparent),
+			0 18px 44px -16px color-mix(in srgb, var(--shade) 30%, transparent),
+			0 1px 4px color-mix(in srgb, var(--shade) 10%, transparent);
+	}
+	&:where(:root[data-theme="light"] *)::before {
+		background: linear-gradient(155deg, white, transparent 35%, transparent 70%, color-mix(in oklab, white 70%, transparent));
+	}
+}
+
+/* ── The pi mascot ───────────────────────────────────────────────────── */
+/* Bobs and blinks at rest and watches the pointer (--lx/--ly for the eyes, --hx
+   for the head a beat behind, each -1..1 and eased every frame by Mascot.tsx);
+   hops and kicks while the tutor works; wiggles when its .mascot-host is
+   hovered. One-off reactions come in as data-act, dozing as data-sleep. Gaze
+   uses the separate translate/rotate properties so it layers on top of the
+   transform animations. */
+.mascot { stroke: none; overflow: visible; filter: drop-shadow(0 2px 6px color-mix(in oklab, var(--accent) 40%, transparent)); }
+.mascot g, .mascot path, .mascot text { transform-box: fill-box; }
+.pi-bob { transform-origin: 50% 100%; animation: pi-bob 4s ease-in-out infinite; }
+.pi-eyes {
+	transform-origin: 50% 50%; animation: pi-blink 5s infinite;
+	translate: calc(var(--lx, 0) * 2.6px) calc(var(--ly, 0) * 1.8px);
+}
+.pi-leg { transform-origin: 50% 0; }
+.pi-head { transform-origin: 50% 100%; rotate: calc(var(--hx, 0) * 3deg); }
+.mascot-host:hover .pi-head { animation: pi-wiggle 600ms var(--ease); }
+:root[data-working] .pi-bob { animation: pi-hop 640ms ease-in-out infinite; }
+:root[data-working] .pi-leg.l { animation: pi-kick 640ms ease-in-out infinite; }
+:root[data-working] .pi-leg.r { animation: pi-kick 640ms ease-in-out infinite reverse; }
+.pi-spark, .pi-z { opacity: 0; transform-origin: 50% 50%; }
+
+/* Poke: crouch and spring, twice (after Clawd's jump). */
+.mascot[data-act="jump"] .pi-bob { animation: pi-jump 1.1s ease-in-out; }
+.mascot[data-act="jump"] .pi-leg.l { animation: pi-splay 1.1s ease-in-out; }
+.mascot[data-act="jump"] .pi-leg.r { animation: pi-splay-r 1.1s ease-in-out; }
+/* Glance right, then left, then back. */
+.mascot[data-act="look"] .pi-eyes { animation: pi-blink 5s infinite, pi-look 1.5s var(--ease); }
+.mascot[data-act="look"] .pi-head { animation: pi-look-head 1.5s var(--ease); }
+/* Whirlpool: swirl down into the middle, then swirl back out. */
+.mascot[data-act="whirl"] .pi-bob { transform-origin: 50% 55%; animation: pi-whirl 1.5s; }
+/* Poked too much: wobbly head, squinting, swaying. */
+.mascot[data-act="dizzy"] .pi-head { animation: pi-wobble 1.7s ease-out; }
+.mascot[data-act="dizzy"] .pi-eyes { animation: pi-squint 1.7s ease-in-out; }
+.mascot[data-act="dizzy"] .pi-bob { animation: pi-sway 1.7s ease-in-out; }
+/* The tutor finished: two happy hops, kicking, with sparkles. */
+.mascot[data-act="happy"] .pi-bob { animation: pi-cheer 1.3s ease-out; }
+.mascot[data-act="happy"] .pi-leg.l { animation: pi-kick 325ms ease-in-out 4; }
+.mascot[data-act="happy"] .pi-leg.r { animation: pi-kick 325ms ease-in-out 4 reverse; }
+.mascot[data-act="happy"] .pi-eyes { animation: pi-beam 1.3s ease-out; }
+.mascot[data-act="happy"] .pi-spark { animation: pi-spark 1s var(--spring) both; }
+.mascot[data-act="happy"] .pi-sparks > :nth-child(2) .pi-spark { animation-delay: 120ms; }
+.mascot[data-act="happy"] .pi-sparks > :nth-child(3) .pi-spark { animation-delay: 240ms; }
+/* Curious head tilt. */
+.mascot[data-act="tilt"] .pi-head { animation: pi-tilt 1.1s var(--ease); }
+/* Dozing: eyes shut, slow breathing, z's drifting up. Waking: a big stretch. */
+.mascot[data-sleep] .pi-eyes { animation: none; transform: scaleY(0.12); translate: 0 1px; }
+.mascot[data-sleep] .pi-bob { animation: pi-breathe 4.5s ease-in-out infinite; }
+.mascot[data-sleep] .pi-head { rotate: 4deg; }
+.mascot[data-sleep] .pi-z { animation: pi-z 3.6s ease-out infinite; }
+.mascot[data-sleep] .pi-z:nth-child(2) { animation-delay: 1.2s; }
+.mascot[data-sleep] .pi-z:nth-child(3) { animation-delay: 2.4s; }
+.mascot[data-act="wake"] .pi-bob { animation: pi-stretch 900ms var(--ease); }
+.mascot[data-act="wake"] .pi-eyes { animation: pi-blink2 900ms; }
+
+@keyframes pi-bob { 50% { transform: translateY(-1.6px); } }
+@keyframes pi-blink { 0%, 92%, 100% { transform: scaleY(1); } 95% { transform: scaleY(0.1); } }
+@keyframes pi-blink2 { 0%, 30%, 50%, 100% { transform: scaleY(1); } 40%, 60% { transform: scaleY(0.1); } }
+@keyframes pi-hop { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-6px); } }
+@keyframes pi-kick { 0%, 100% { transform: rotate(-9deg); } 50% { transform: rotate(9deg); } }
+@keyframes pi-wiggle { 25% { transform: rotate(-9deg); } 60% { transform: rotate(7deg); } }
+@keyframes pi-jump {
+	0%, 50%, 100% { transform: none; }
+	12%, 60% { transform: translateY(1px) scale(1.1, 0.84); }
+	26%, 74% { transform: translateY(-13px) scale(0.94, 1.08); }
+	40%, 88% { transform: translateY(0) scale(1.06, 0.92); }
+}
+@keyframes pi-splay { 0%, 12%, 40%, 60%, 88%, 100% { transform: none; } 26%, 74% { transform: rotate(16deg); } }
+@keyframes pi-splay-r { 0%, 12%, 40%, 60%, 88%, 100% { transform: none; } 26%, 74% { transform: rotate(-16deg); } }
+@keyframes pi-look { 0%, 100% { translate: 0 0; } 15%, 40% { translate: 3px 0; } 55%, 82% { translate: -3px 0; } }
+@keyframes pi-look-head { 15%, 40% { transform: rotate(5deg); } 55%, 82% { transform: rotate(-5deg); } }
+/* Two turns in, speeding up as it shrinks, then one turn out, slowing to a stop. The two curves
+   meet at the same turning speed (in: end slope 0.4/0.25 over 720deg in 55%; out: start slope
+   0.52/0.2 over 360deg in 45%), so there's no jolt at the bottom. */
+@keyframes pi-whirl {
+	0% { transform: translateY(0) rotate(0deg) scale(1); animation-timing-function: cubic-bezier(0.45, 0, 0.75, 0.6); }
+	55% { transform: translateY(4px) rotate(720deg) scale(0.3); animation-timing-function: cubic-bezier(0.2, 0.52, 0.3, 1); }
+	100% { transform: translateY(0) rotate(1080deg) scale(1); }
+}
+@keyframes pi-wobble {
+	0%, 100% { transform: none; }
+	10% { transform: rotate(-14deg); } 25% { transform: rotate(12deg); } 40% { transform: rotate(-9deg); }
+	55% { transform: rotate(7deg); } 70% { transform: rotate(-4deg); } 85% { transform: rotate(2deg); }
+}
+@keyframes pi-squint { 0%, 100% { transform: scaleY(1); } 8%, 85% { transform: scaleY(0.3); } }
+@keyframes pi-sway { 0%, 100% { transform: none; } 20% { transform: translateX(-2px) rotate(-3deg); } 45% { transform: translateX(2px) rotate(3deg); } 70% { transform: translateX(-1px) rotate(-1deg); } }
+@keyframes pi-cheer {
+	0%, 36%, 72%, 100% { transform: none; }
+	6%, 42% { transform: scale(1.06, 0.92); }
+	18%, 54% { transform: translateY(-10px) scale(0.96, 1.05); }
+}
+@keyframes pi-beam { 0%, 100% { transform: scaleY(1); } 10%, 80% { transform: scaleY(0.55); } }
+@keyframes pi-spark { 0% { opacity: 0; transform: scale(0) rotate(0); } 35% { opacity: 1; transform: scale(1.15) rotate(45deg); } 100% { opacity: 0; transform: scale(0.4) rotate(90deg); } }
+@keyframes pi-tilt { 0%, 100% { transform: none; } 25%, 70% { transform: rotate(-10deg); } }
+@keyframes pi-breathe { 50% { transform: scale(1.02, 0.97); } }
+@keyframes pi-z { 0% { opacity: 0; transform: translate(0, 4px) scale(0.6); } 25% { opacity: 0.9; } 100% { opacity: 0; transform: translate(6px, -10px) scale(1.1); } }
+@keyframes pi-stretch { 0%, 100% { transform: none; } 30% { transform: translateY(-3px) scale(0.94, 1.14); } 55% { transform: scale(1.06, 0.93); } 75% { transform: none; } }
+
+/* ── Markdown (generated HTML, so styled by element) ─────────────────── */
+.prose { font: 18px/1.65 var(--read); color: var(--ink); overflow-wrap: break-word; }
+.prose > :first-child { margin-top: 0; }
+.prose > :last-child { margin-bottom: 0; }
+.prose p, .prose ul, .prose ol, .prose blockquote, .prose table, .prose pre, .prose .math-display, .prose .diagram, .prose figure { margin: 0 0 18px; }
+/* Headings take the interface font: sans headings over serif body text. */
+.prose h1, .prose h2, .prose h3, .prose h4 { font-family: var(--ui); letter-spacing: -0.02em; line-height: 1.2; margin: 36px 0 12px; }
+.prose h1 { font-size: 30px; font-weight: 600; }
+.prose h2 { font-size: 24px; font-weight: 600; }
+.prose h3 { font-size: 20px; font-weight: 600; }
+.prose h4 { font-size: 17px; font-weight: 600; }
+.prose strong { font-weight: 650; }
+.prose a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+.prose ul, .prose ol { padding-left: 1.3em; }
+.prose li { margin: 4px 0; }
+.prose li::marker { color: var(--ink-3); }
+.prose hr { border: 0; height: 1px; background: var(--line); margin: 32px 0; }
+.prose blockquote { margin-left: 0; padding: 12px 18px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; color: var(--ink-2); }
+.prose blockquote > :last-child { margin-bottom: 0; }
+.prose code { font: 0.8em var(--mono); background: var(--code-bg); border: 1px solid var(--line); padding: 0.1em 0.35em; border-radius: 5px; }
+.prose pre { background: var(--code-bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; overflow-x: auto; }
+.prose pre code { font-size: 13.5px; line-height: 1.55; background: none; border: 0; padding: 0; }
+.prose table { border-collapse: collapse; font: 15px/1.45 var(--ui); display: block; overflow-x: auto; max-width: 100%; }
+.prose th, .prose td { border-bottom: 1px solid var(--line); padding: 7px 14px 7px 0; text-align: left; vertical-align: top; }
+.prose th { font-weight: 600; color: var(--ink-2); border-bottom-color: var(--line-strong); }
+.prose img { max-width: 100%; height: auto; border-radius: 10px; }
+.prose .embed { display: block; margin: 0 0 18px; background: white; padding: 8px; border: 1px solid var(--line); }
+.prose .math-display { overflow-x: auto; overflow-y: hidden; padding: 4px 0; }
+.prose .katex { font-size: 1.06em; }
+.prose .math-display .katex { font-size: 1.12em; }
+.prose .math-error { color: var(--bad); font-family: var(--mono); font-size: 0.8em; }
+.prose .wikilink { color: var(--accent); text-decoration: none; border-bottom: 1px dashed var(--accent-line); }
+/* Transcript: Tailwind's preflight strips what generated markdown gets from
+   the browser (link underlines, list markers, inline images,
+   h5/h6, the pre's own font that sets its line boxes); put it back. */
+.prose a { text-decoration-line: underline; }
+.prose ul { list-style-type: disc; }
+.prose ol { list-style-type: decimal; }
+.prose :is(ul, ol) ul { list-style-type: circle; }
+.prose :is(ul, ol) :is(ul, ol) ul { list-style-type: square; }
+.prose img { display: inline; vertical-align: baseline; }
+.prose pre { font-family: monospace; }
+.prose h5 { font-size: 0.83em; font-weight: bold; margin: 1.67em 0; }
+.prose h6 { font-size: 0.67em; font-weight: bold; margin: 2.33em 0; }
+
+.diagram { display: flex; justify-content: center; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow-x: auto; }
+.diagram svg { width: auto; height: auto; max-width: 100%; stroke: none; fill: initial; }
+.diagram.pending { font: 13px var(--ui); color: var(--ink-3); }
+.diagram.failed { justify-content: flex-start; }
+.diagram.failed pre { margin: 0; background: none; border: 0; padding: 0; }
+
+/* Syntax colors come from the theme tokens. */
+.hljs-comment, .hljs-quote { color: var(--ink-3); font-style: italic; }
+.hljs-keyword, .hljs-selector-tag, .hljs-type { color: var(--accent); }
+.hljs-built_in { color: var(--bad); }
+.hljs-string, .hljs-symbol, .hljs-template-variable { color: var(--good); }
+.hljs-attr, .hljs-property { color: var(--syn-attr); }
+.hljs-number, .hljs-literal { color: var(--syn-number); }
+.hljs-variable, .hljs-params { color: var(--ink); }
+.hljs-title, .hljs-section, .hljs-function .hljs-title { color: var(--syn-attr); }
+.hljs-meta { color: var(--warn); }
+
+/* Command output: ANSI SGR classes from ansiToHtml. */
+.ansi .b { font-weight: 700; }
+.ansi .d { opacity: 0.6; }
+.ansi .i { font-style: italic; }
+.ansi .u { text-decoration: underline; }
+
+@media (prefers-reduced-motion: reduce) {
+	*, *::before { animation: none !important; transition: none !important; }
+}
+
+/* ── Home hero mascot (Home.tsx) ─────────────────────────────────────── */
+/* A softer, bigger glow than the small mascot's (the .mascot rule is unlayered, so not a utility). */
+.hero-mascot .mascot { filter: drop-shadow(0 16px 30px color-mix(in oklab, var(--accent) 35%, transparent)); }

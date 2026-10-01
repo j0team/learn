@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Learn</title>
+	<link rel="icon" href="/pi.svg" type="image/svg+xml" />
+	<script>
+		// Apply saved theme and panel state before first paint to avoid a flash.
+		const root = document.documentElement;
+		const t = localStorage.getItem("learn-theme");
+		if (t) root.dataset.theme = t;
+		for (const k of ["uiFont", "readFont", "width"]) {
+			const v = localStorage.getItem(`learn-${k}`);
+			if (v) root.dataset[k] = v;
+		}
+		const sb = localStorage.getItem("learn-sidebar");
+		if (sb === "closed" || (!sb && matchMedia("(max-width: 860px)").matches)) root.dataset.sidebar = "closed";
+		const sw = localStorage.getItem("learn-sidebar-w");
+		if (sw) root.style.setProperty("--sidebar-w", `${sw}px`);
+		if (localStorage.getItem("learn-side") === "open") root.dataset.side = "open";
+		try {
+			const p = JSON.parse(localStorage.getItem("learn-side-pos"));
+			if (p) for (const k of ["x", "y"]) root.style.setProperty(`--side-${k}`, `${p[k]}px`);
+			const s = JSON.parse(localStorage.getItem("learn-side-size"));
+			if (s) for (const k of ["w", "h"]) root.style.setProperty(`--side-${k}`, `${s[k]}px`);
+		} catch {}
+	</script>
+</head>
+<body>
+	<div id="root"></div>
+	<script type="module" src="/src/main.tsx"></script>
+</body>
+</html>
