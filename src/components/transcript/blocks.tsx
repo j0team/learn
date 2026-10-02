@@ -6,7 +6,7 @@ import type { AssistantBlock, Block, NoteBlock, OutputBlock, ToolBlock, UserBloc
 import { cn } from "@/lib/utils";
 import { ansiToHtml } from "./ansi";
 import { AskCard } from "./cards/AskCard";
-import { QuizCard } from "./cards/QuizCard";
+import { QuizSlot } from "./cards/QuizBeside";
 import { scheduleFrame } from "./scroll";
 
 const ICON_FILE = <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 3.5h5.5L15 7v9.5H6z M11 3.5V7.5h4" /></svg>;
@@ -46,7 +46,7 @@ export const BlockView = memo(function BlockView(p: BlockProps) {
 		case "tool":
 			return <ToolRow block={b} cls={cls} />;
 		case "quiz":
-			return <QuizCard block={b} className={cls} />;
+			return <QuizSlot block={b} cls={cls} />;
 		case "ask":
 			return <AskCard block={b} className={cls} />;
 		case "error":

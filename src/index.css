@@ -67,6 +67,7 @@
 	--measure: 880px;
 	--sidebar-w: 248px;
 	--side-w: 380px;
+	--quiz-w: clamp(360px, 36vw, 520px);
 	--ease: cubic-bezier(0.22, 1, 0.36, 1);
 	--spring: cubic-bezier(0.34, 1.32, 0.64, 1); /* a little overshoot, then settles */
 }

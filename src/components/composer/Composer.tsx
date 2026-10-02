@@ -4,7 +4,7 @@
 
 import { Fragment, useEffect, useLayoutEffect, useRef } from "react";
 import { buttonVariants } from "@/components/ui/button";
-import { openCard, post, refs, setDraft, useStore } from "@/lib/store";
+import { openCard, post, refs, setDraft, useOpenQuiz, useStore, useWide } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { sendMessage } from "./commands";
 import { ModelPicker } from "./ModelPicker";
@@ -19,6 +19,10 @@ export function Composer() {
 	const busy = useStore((s) => s.busy);
 	const hasContent = useStore((s) => s.blocks.length > 0);
 	const card = useStore((s) => openCard(s.blocks));
+	// Where the open card is: beside the lesson, still a closed bar (wide windows), or in the lesson.
+	const quizOpen = !!useOpenQuiz();
+	const quizPending = useStore((s) => s.blocks.some((b) => b.kind === "quiz" && b.state === "pending"));
+	const quizBar = useWide() && !quizOpen && quizPending;
 	const rewind = useStore((s) => !!s.rewind);
 	const flash = useStore((s) => s.flash);
 	const input = useRef<HTMLTextAreaElement>(null);
@@ -138,7 +142,7 @@ export function Composer() {
 					id="input"
 					rows={1}
 					className="max-h-[40vh] min-w-0 flex-1 resize-none border-0 bg-transparent px-1.5 pt-1 pb-0.5 font-ui text-[16px] leading-[1.5] text-ink outline-none placeholder:text-ink-3 disabled:cursor-not-allowed"
-					placeholder={card ? "Answer the card above, or ask the side chat" : busy ? "Add a thought while the tutor works" : hasContent ? "Reply" : "Ask anything, or name a topic"}
+					placeholder={quizBar ? "Open the check-in to answer, or ask the side chat" : card ? `Answer the card ${quizOpen ? "on the right" : "above"}, or ask the side chat` : busy ? "Add a thought while the tutor works" : hasContent ? "Reply" : "Ask anything, or name a topic"}
 					aria-label="Message"
 					aria-autocomplete="list"
 					aria-controls="suggest"

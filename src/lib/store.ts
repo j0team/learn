@@ -2,11 +2,15 @@
 // more than one component needs: panels, editing, Esc Esc rewind, the flash line.
 // Components keep anything else (drafts, hover, menus) to themselves.
 
+import { useSyncExternalStore } from "react";
 import { create } from "zustand";
-import type { AssistantBlock, Block, Command, Lessons, Op, Session, SideBlock, Tuning, Usage } from "./types";
+import type { AssistantBlock, Block, Command, Lessons, Op, QuizBlock, Session, SideBlock, Tuning, Usage } from "./types";
 
 export const NARROW = "(max-width: 860px)";
 export const narrowScreen = () => matchMedia(NARROW).matches;
+/** Wide enough for worksheets to open beside the lesson (in the lesson they show as a bar). */
+const WIDE = matchMedia("(min-width: 1080px)");
+export const wideScreen = () => WIDE.matches;
 const root = document.documentElement;
 
 export type Flash = { msg: string; bad: boolean };
@@ -33,6 +37,8 @@ type State = {
 	draft: string;
 	sidebarOpen: boolean;
 	sideOpen: boolean;
+	/** The worksheet open beside the lesson (wide windows only). */
+	quizOpen: string | null;
 	settingsOpen: boolean;
 	/** Open Settings scrolled to this field ("Set up providers"); Settings clears it. */
 	settingsFocus: "provider-key" | null;
@@ -70,6 +76,7 @@ export const useStore = create<State>(() => ({
 	draft: "",
 	sidebarOpen: root.dataset.sidebar !== "closed",
 	sideOpen: root.dataset.side === "open",
+	quizOpen: null,
 	settingsOpen: false,
 	settingsFocus: null,
 	modelsVersion: 0,
@@ -97,6 +104,18 @@ export const layout: { scroller: HTMLDivElement | null } = { scroller: null };
 /** A worksheet or question waiting on the learner (the composer locks meanwhile). */
 export const openCard = (blocks: Block[]) => blocks.some((b) => (b.kind === "quiz" || b.kind === "ask") && b.state === "pending");
 
+const onWide = (change: () => void) => {
+	WIDE.addEventListener("change", change);
+	return () => WIDE.removeEventListener("change", change);
+};
+export const useWide = () => useSyncExternalStore(onWide, () => WIDE.matches);
+
+/** The worksheet open beside the lesson, or undefined. */
+export function useOpenQuiz() {
+	const wide = useWide();
+	return useStore((s) => (wide && s.quizOpen ? s.blocks.find((b): b is QuizBlock => b.kind === "quiz" && b.id === s.quizOpen) : undefined));
+}
+
 // ─── Server ops ─────────────────────────────────────────────────────────────
 
 const replace = (blocks: Block[], b: Block) => blocks.map((x) => (x.id === b.id ? b : x));
@@ -120,6 +139,8 @@ export function apply(op: Op) {
 				editing: null,
 				rewind: null,
 				saveOpen: false,
+				// Block ids repeat across lessons; another lesson starts with nothing open.
+				quizOpen: op.session.file === s.session.file ? s.quizOpen : null,
 			}));
 			loadLessons();
 			return;
@@ -264,6 +285,8 @@ export function setSide(open: boolean) {
 	localStorage.setItem("learn-side", open ? "open" : "closed");
 	set({ sideOpen: open });
 }
+
+export const setQuizOpen = (id: string | null) => set({ quizOpen: id });
 
 export async function askSide(text: string) {
 	if (!text.trim() || get().side.busy) return false;

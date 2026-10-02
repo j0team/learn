@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useLayoutEffect, useMemo } from "react";
 import { progressAt, stageText, useProgressMarks } from "@/components/outline/progress";
 import { PlanCard } from "@/components/plan/PlanMap";
-import { exitRewind, openCard, pickRewind, post, refs, startEdit, startRewind, useStore } from "@/lib/store";
+import { exitRewind, openCard, pickRewind, post, refs, startEdit, startRewind, useStore, wideScreen } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { BlockView, sentEdit } from "./blocks";
 import { blockEl, nearBottom, toBottom } from "./scroll";
@@ -36,7 +36,7 @@ useStore.subscribe((s, prev) => {
 	const b = s.blocks[s.blocks.length - 1];
 	// A reply arrives empty and shows once it has text, without rising.
 	if (b.kind !== "assistant" || b.parts.some((p) => p?.type === "text" && p.text.trim())) live.add(b.id);
-	if (b.kind === "quiz" || b.kind === "ask") jumpTo = b.id;
+	if (b.kind === "ask" || (b.kind === "quiz" && !wideScreen())) jumpTo = b.id;
 });
 
 

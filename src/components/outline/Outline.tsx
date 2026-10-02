@@ -5,7 +5,7 @@
 
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { renderInline } from "@/lib/markdown";
-import { layout, NARROW, narrowScreen, useStore } from "@/lib/store";
+import { layout, NARROW, narrowScreen, useOpenQuiz, useStore } from "@/lib/store";
 import type { Block, ProgressBlock } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { PlanThumb } from "@/components/plan/PlanMap";
@@ -67,7 +67,9 @@ export function Outline() {
 
 	const marks = useProgressMarks();
 	const p = useMemo(() => progressAt(marks), [marks]);
-	const has = blocks.length > 0 && (!!p || entries.length > 0);
+	// A worksheet open beside the lesson takes the room the outline would use.
+	const quizBeside = !!useOpenQuiz();
+	const has = blocks.length > 0 && (!!p || entries.length > 0) && !quizBeside;
 	const hasRef = useRef(has);
 	hasRef.current = has;
 

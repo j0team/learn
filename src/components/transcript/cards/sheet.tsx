@@ -31,19 +31,21 @@ export function Sheet({ id, cancelled, className, children }: { id: string; canc
 	);
 }
 
-export function SheetHead({ kicker, title }: { kicker: string; title?: string }) {
+/** `children`: a control at the right end (closing the panel beside the lesson); `done`: answered, so the kicker turns green. */
+export function SheetHead({ kicker, title, done, className, children }: { kicker: string; title?: string; done?: boolean; className?: string; children?: ReactNode }) {
 	return (
-		<div className="flex items-center gap-2.5 px-[22px] pt-[18px]">
-			<span className="rounded-[999px] bg-primary-soft px-[9px] py-[3px] font-ui text-[12px] leading-[1.3] font-medium text-primary">{kicker}</span>
-			{title && <Markdown inline className="font-ui text-[16px] leading-[1.3] font-semibold tracking-[-0.01em] text-ink" text={title} />}
+		<div className={cn("flex items-center gap-2.5 px-[22px] pt-[18px]", className)}>
+			<span className={cn("flex-none rounded-[999px] px-[9px] py-[3px] font-ui text-[12px] leading-[1.3] font-medium", done ? "bg-good-soft text-good" : "bg-primary-soft text-primary")}>{kicker}</span>
+			{title && <Markdown inline className="min-w-0 flex-1 truncate font-ui text-[15px] leading-[1.3] font-semibold tracking-[-0.01em] text-ink" text={title} />}
+			{children && <div className="ml-auto flex-none">{children}</div>}
 		</div>
 	);
 }
 
 export function SheetFoot({ status, score, children }: { status: string; score?: boolean; children?: ReactNode }) {
 	return (
-		<div className="flex items-center justify-between gap-3 border-t border-line bg-surface py-3 pr-4 pl-[22px]">
-			<span className={cn("text-[13px] text-ink-3", score && "font-semibold text-ink-2")}>{status}</span>
+		<div className="flex items-center gap-3 border-t border-line bg-surface py-3 pr-4 pl-[22px]">
+			<span className={cn("mr-auto text-[13px] text-ink-3", score && "font-semibold text-ink-2")}>{status}</span>
 			{children}
 		</div>
 	);

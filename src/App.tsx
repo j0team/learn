@@ -10,11 +10,13 @@ import { Sidebar } from "@/components/sidebar/Sidebar";
 import { Topbar } from "@/components/Topbar";
 import { installRewindKeys, Transcript } from "@/components/transcript/Transcript";
 import { installShortcuts } from "@/lib/shortcuts";
-import { connect, layout, useStore } from "@/lib/store";
+import { QuizPane } from "@/components/transcript/cards/QuizBeside";
+import { connect, layout, useOpenQuiz, useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 
 export function App() {
 	const sidebarOpen = useStore((s) => s.sidebarOpen);
+	const quizBeside = !!useOpenQuiz();
 	const hasContent = useStore((s) => s.blocks.length > 0);
 	const title = useStore((s) => s.session.title);
 	const scroller = useRef<HTMLDivElement>(null);
@@ -34,8 +36,11 @@ export function App() {
 		<div
 			className={cn(
 				"grid h-full transition-[grid-template-columns] duration-220 ease-soft in-data-resizing:transition-none",
-				sidebarOpen ? "grid-cols-[var(--sidebar-w)_minmax(0,1fr)]" : "grid-cols-[0_minmax(0,1fr)]",
-				"narrow:grid-cols-[0_minmax(0,1fr)]",
+				// Sidebar, lesson, and the open worksheet when it's beside the lesson.
+				"grid-cols-[var(--sidebar-col)_minmax(0,1fr)_var(--quiz-col)]",
+				sidebarOpen ? "[--sidebar-col:var(--sidebar-w)]" : "[--sidebar-col:0px]",
+				quizBeside ? "[--quiz-col:var(--quiz-w)]" : "[--quiz-col:0px]",
+				"narrow:[--sidebar-col:0px]",
 			)}
 		>
 			<Sidebar />
@@ -50,6 +55,7 @@ export function App() {
 				<Outline />
 				<Composer />
 			</div>
+			<QuizPane />
 			<SideChat />
 			<Settings />
 			<Onboarding />
