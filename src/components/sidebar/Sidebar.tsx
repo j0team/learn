@@ -28,9 +28,11 @@ export function Sidebar() {
 			id="sidebar"
 			aria-label="Lessons"
 			className={cn(
-				"relative flex min-w-0 flex-col overflow-hidden border-r border-line bg-[color-mix(in_oklab,var(--panel)_62%,transparent)] backdrop-blur-[28px] backdrop-saturate-150",
+				"relative flex min-w-0 flex-col overflow-hidden border-r border-line bg-[color-mix(in_oklab,var(--panel)_62%,transparent)]",
 				!open && "border-r-transparent",
-				"narrow:fixed narrow:inset-y-0 narrow:left-0 narrow:z-5 narrow:w-[260px] narrow:shadow-soft narrow:transition-transform narrow:duration-220 narrow:ease-soft",
+				// Blurred only where it covers the lesson. Beside it there's just the ambient light
+				// behind, and the blur there flickers while the lesson scrolls.
+				"narrow:fixed narrow:inset-y-0 narrow:left-0 narrow:z-5 narrow:w-[260px] narrow:shadow-soft narrow:backdrop-blur-[28px] narrow:backdrop-saturate-150 narrow:transition-transform narrow:duration-220 narrow:ease-soft",
 				!open && "narrow:-translate-x-full",
 			)}
 		>
