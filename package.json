@@ -2,7 +2,7 @@
   "name": "learn",
   "productName": "Learn",
   "private": true,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A local web app for learning with an AI tutor, built on pi.",
   "license": "MIT",
   "type": "module",
